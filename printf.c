@@ -32,7 +32,7 @@ int _printf(const char *format, ...)
 				case 's':
 					str = va_arg(args, char*);
 					write(1, str, strlen(str));
-					counter++;
+					counter += strlen(str);
 					break;
 				case '%':
 					write(1, format, 1);
