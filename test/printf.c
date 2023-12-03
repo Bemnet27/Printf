@@ -32,8 +32,8 @@ int _intprintf(int holder, int base_val)
 	if (holder < 0)
 	{
 		_charprintf('-');
-		counter++;
-		return _intprintf(((holder*holder)/2), base_val) + 1;
+		counter = _intprintf(((holder*holder)/2), base_val) + 1;
+		return counter;
 	}
 	else if (holder < base_val)
 	{
