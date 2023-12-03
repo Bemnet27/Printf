@@ -5,5 +5,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <unistd.h>
+int _charprintf(int holder)
+void _strprintf(char *str)
+int _intprintf(int holder, int base_val)
 int _printf(const char *format, ...);
 #endif
