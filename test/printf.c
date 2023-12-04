@@ -8,7 +8,13 @@
 
 int _charprintf(int holder)
 {
+	
 	return write(1, &holder, 1);
+}
+
+int _putchar(char c)
+{
+	return write(1, &c, 1);	
 }
 
 void _strprintf(char *str)
@@ -23,28 +29,40 @@ void _strprintf(char *str)
 	}
 }
 
-int _intprintf(int holder, int base_val)
+int _intprintf(int digit_holder, int base_val)
 {
 	int counter;
+	int abs;
 
 	char hex_values[] = "0123456789abcdef";
 	counter = 0;
-	if (holder < 0)
+	if (digit_holder < 0)
 	{
-		_charprintf('-');
-		counter = _intprintf(((holder*holder)/2), base_val) + 1;
-		return counter;
+		_putchar('-');
+		counter++;
+		abs = labs(digit_holder);
+		if (abs < base_val)
+        	{
+			counter++;
+			_putchar(hex_values[abs]);
+			return counter;
+		}
+		else
+		{
+			counter = _intprintf(abs / base_val, base_val);
+			return counter + _intprintf(abs % base_val, base_val);
+		}
 	}
-	else if (holder < base_val)
+	else if (digit_holder < base_val)
 	{
 		counter++;
-		_charprintf(hex_values[holder]);
+		_putchar(hex_values[digit_holder]);
 		return counter;
 	}
 	else
 	{
-		counter = _intprintf(holder / base_val, base_val);
-		return counter + _intprintf(holder % base_val, base_val);
+		counter = _intprintf(digit_holder / base_val, base_val);
+		return counter + _intprintf(digit_holder % base_val, base_val);
 	}
 }
 
@@ -53,6 +71,7 @@ int _printf(const char *format, ...)
 	char holder;
 	int counter;
 	char *str;
+	int digit_holder;
 
 	va_list args;
 
@@ -80,12 +99,9 @@ int _printf(const char *format, ...)
 					counter++;
 					break;
 				case 'd':
-					holder = va_arg(args, int);
-					counter += _intprintf(holder, 10);
-					break;
 				case 'i':
-					holder = va_arg(args, int);
-                                        counter += _intprintf(holder, 10);
+					digit_holder = va_arg(args, int);
+                                        counter += _intprintf(digit_holder, 10);
                                         break;
 				default:
 					write(1, format, 1);
