@@ -29,13 +29,20 @@ void _strprintf(char *str)
 	}
 }
 
-int _intprintf(int digit_holder, int base_val)
+int _intprintf(long digit_holder, int base_val, char case_char)
 {
 	int counter;
-	int abs;
-
-	char hex_values[] = "0123456789abcdef";
+	long abs;
+	
+	char hex_values_lo[] = "0123456789abcdef";
+	char hex_values_up[] = "0123456789ABCDEF";
+	char *hex_values = (case_char == 'X') ? hex_values_up : hex_values_lo;
+	
+	/**
+	 * digit_holder = (case_char == 'X' || 'x') ? labs(digit_holder) : digit_holder;
+	 */
 	counter = 0;
+
 	if (digit_holder < 0)
 	{
 		_putchar('-');
@@ -49,8 +56,8 @@ int _intprintf(int digit_holder, int base_val)
 		}
 		else
 		{
-			counter = _intprintf(abs / base_val, base_val);
-			return counter + _intprintf(abs % base_val, base_val);
+			counter = _intprintf(abs / base_val, base_val, case_char);
+			return counter + _intprintf(abs % base_val, base_val, case_char);
 		}
 	}
 	else if (digit_holder < base_val)
@@ -61,8 +68,8 @@ int _intprintf(int digit_holder, int base_val)
 	}
 	else
 	{
-		counter = _intprintf(digit_holder / base_val, base_val);
-		return counter + _intprintf(digit_holder % base_val, base_val);
+		counter = _intprintf(digit_holder / base_val, base_val, case_char);
+		return counter + _intprintf(digit_holder % base_val, base_val, case_char);
 	}
 }
 
@@ -72,6 +79,7 @@ int _printf(const char *format, ...)
 	int counter;
 	char *str;
 	int digit_holder;
+	unsigned int hex_digit_h;
 
 	va_list args;
 
@@ -101,8 +109,24 @@ int _printf(const char *format, ...)
 				case 'd':
 				case 'i':
 					digit_holder = va_arg(args, int);
-                                        counter += _intprintf(digit_holder, 10);
+					counter += _intprintf(digit_holder, 10, 'i');
+					break;
+				case 'o':
+                                        hex_digit_h = va_arg(args, unsigned int);
+                                        counter += _intprintf(hex_digit_h, 8, 'o');
                                         break;
+				case 'u':
+                                        hex_digit_h = va_arg(args, unsigned int);
+                                        counter += _intprintf((long)(hex_digit_h), 10, 'u');
+                                        break;
+				case 'x':
+					hex_digit_h = va_arg(args, unsigned int);
+					counter += _intprintf((long)(hex_digit_h), 16, 'x');
+					break;
+				case 'X':
+					hex_digit_h = va_arg(args, unsigned int);
+					counter += _intprintf((long)(hex_digit_h), 16, 'X');
+					break;
 				default:
 					write(1, format, 1);
 					counter++;
