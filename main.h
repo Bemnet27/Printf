@@ -6,7 +6,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 int _charprintf(int holder);
-void _strprintf(char *str);
-int _intprintf(int holder, int base_val);
+int _putchar(char c);
+int _strprintf(char *str);
+int get_base_val(char case_char);
+int _intprintf(long digit_holder, char case_char);
 int _printf(const char *format, ...);
 #endif
